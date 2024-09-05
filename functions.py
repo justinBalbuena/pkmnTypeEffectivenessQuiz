@@ -1,8 +1,6 @@
 import json
 
-types = ["normal", "fire", "water", "electric", "grass", "ice", "fighting",
-         "poison", "ground", "flying", "psychic", "bug", "rock", "ghost",
-         "dragon", "dark", "steel", "fairy"]
+
 
 
 def get_dual_type_effectiveness(type1, type2, attacking_type):
@@ -71,6 +69,14 @@ def get_info():
     return data
 
 
+def get_types():
+    with open("type.json", 'r') as file:
+        content = file.read()
+
+    data = json.loads(content)
+    types_list = list(data.keys())
+    return types_list[:-1]
+
+
 if __name__ == "__main__":
-    for attackingType in types:
-        get_single_type_effectiveness("electric", attackingType)
+    print(get_types())
