@@ -1,6 +1,5 @@
 import json
-
-
+import random
 
 
 def get_dual_type_effectiveness(type1, type2, attacking_type):
@@ -69,14 +68,24 @@ def get_info():
     return data
 
 
-def get_types():
-    with open("type.json", 'r') as file:
-        content = file.read()
-
-    data = json.loads(content)
+def get_all_types():
+    data = get_info()
     types_list = list(data.keys())
     return types_list[:-1]
 
 
+def get_single_random_types():
+    types = get_all_types()
+    return {types[random.randint(0, len(types) - 1)]}
+
+
+def get_double_random_types():
+    types = get_all_types()
+    type1 = types[random.randint(0, len(types) - 1)]
+    type2 = types[random.randint(0, len(types) - 1)]
+    while type2 == type1:
+        type2 = types[random.randint(0, len(types) - 1)]
+    return type1, type2
+
 if __name__ == "__main__":
-    print(get_types())
+    print(get_all_types())

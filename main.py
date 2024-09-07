@@ -1,40 +1,113 @@
 import streamlit as st
+import random
 import functions
 
+
 colors_dict = {
-    "Normal": '#A8A77A',
-    "Fire": '#EE8130',
-    "Water": '#6390F0',
-    "Electric": '#F7D02C',
-    "Grass": '#7AC74C',
-    "Ice": '#96D9D6',
-    "Fighting": '#C22E28',
-    "Poison": '#A33EA1',
-    "Ground": '#E2BF65',
-    "Flying": '#A98FF3',
-    "Psychic": '#F95587',
-    "Bug": '#A6B91A',
-    "Rock": '#B6A136',
-    "Ghost": '#735797',
-    "Dragon": '#6F35FC',
-    "Dark": '#705746',
-    "Steel": '#B7B7CE',
-    "Fairy": '#D685AD',
+    "normal": '#A8A77A',
+    "fire": '#EE8130',
+    "water": '#6390F0',
+    "electric": '#F7D02C',
+    "grass": '#7AC74C',
+    "ice": '#96D9D6',
+    "fighting": '#C22E28',
+    "poison": '#A33EA1',
+    "ground": '#E2BF65',
+    "flying": '#A98FF3',
+    "psychic": '#F95587',
+    "bug": '#A6B91A',
+    "rock": '#B6A136',
+    "ghost": '#735797',
+    "dragon": '#6F35FC',
+    "dark": '#705746',
+    "steel": '#B7B7CE',
+    "fairy": '#D685AD',
 }
+
+types_list = functions.get_all_types()
+user_answers = []
+
 
 st.set_page_config(layout="wide")
 st.title("Pokemon Type Effectiveness Quiz")
-types_list = functions.get_types()
+
+st.markdown("""
+                <br>
+                <br>
+                <br>
+                <br>
+            """,
+            unsafe_allow_html=True)
+
+
+if 'session_initialized' not in st.session_state:
+    # Initialize the session state flag
+    st.session_state.session_initialized = True
+
+    # Generate and save the coinflip value
+    st.session_state.coinflip = random.randint(1, 2)
+
+    if st.session_state.coinflip == 1:
+        st.session_state.dynamic_choice = functions.get_single_random_types()
+    else:
+        st.session_state.dynamic_choice = functions.get_double_random_types()
+    st.write(f"""
+                <br>
+                <br>
+                This is the coinflip
+                {st.session_state.coinflip}
+                <br>
+                <br>
+            """)
+
+st.write("Dynamic Choice:", list(st.session_state.dynamic_choice))
+
+types_to_guess = st.columns(st.session_state.coinflip)
+for index, col in enumerate(types_to_guess):
+    col.markdown(
+        f"""
+                <style>
+                    .{list(st.session_state.dynamic_choice)[index]} {{
+                        background-color: {colors_dict[list(st.session_state.dynamic_choice)[index]]};
+                        display: flex;
+                        justify-content: center;
+                        align-center:center;
+                    }}
+                </style>
+                <div class="{list(st.session_state.dynamic_choice)[index]}">
+                    <h4>{list(st.session_state.dynamic_choice)[index].title()}</h4>
+                </div>
+            """,
+        unsafe_allow_html=True
+    )
+
+st.markdown("""
+                <br>
+                <br>
+                <br>
+                <br>
+            """,
+            unsafe_allow_html=True)
+
+# if 'session_initialized' not in st.session_state:
+#    num = random.randint(1, 2)
+#    if num == 1:
+#        functions.get_dual_type_effectiveness(
+#            types_list[random.randint(0, 17)], types_list[random.randint(0, 17)])
+#    else:
+#        functions.get_single_type_effectiveness()
+
 
 num_columns = len(types_list)
 columns_row1 = st.columns(9)
 columns_row2 = st.columns(9)
+
 for index, col in enumerate(columns_row1 + columns_row2):
     col.markdown(
         f"""
             <style>
                 .{types_list[index]} {{
-                    background-color: {colors_dict[types_list[index].title()]};
+                    background-color: {colors_dict[types_list[index]]};
                     display: flex;
                     justify-content: center;
                     align-center:center;
@@ -46,10 +119,19 @@ for index, col in enumerate(columns_row1 + columns_row2):
         """,
         unsafe_allow_html=True
     )
-    col.text_input(label="Input:", key=index)
+    col.text_input(label="Input:", key=f"answer{index}")
 
-# Button to submit and display the inputs
+st.markdown("""
+                <br>
+                <br>
+            """,
+            unsafe_allow_html=True)
+
+# after pressing submit, the answers will be collected and put into this list
 if st.button("Submit"):
-    st.write("Submit button clicked!")
-
-print(colors_dict['Normal'])
+    try:
+        for index in range(len(columns_row1) + len(columns_row2)):
+            user_answers.append(float(st.session_state[f"answer{index}"]))
+        st.write(user_answers)
+    except ValueError:
+        st.write("Please make sure to put a valid answer into every field")
