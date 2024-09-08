@@ -38,6 +38,12 @@ st.markdown("""
             """,
             unsafe_allow_html=True)
 
+st.markdown(
+    """
+        <h4>Valid answers are 1, 2, 4, 0.5, and 0.25</h4>
+    """,
+    unsafe_allow_html=True)
+
 
 if 'session_initialized' not in st.session_state:
     # Initialize the session state flag
@@ -50,16 +56,8 @@ if 'session_initialized' not in st.session_state:
         st.session_state.dynamic_choice = functions.get_single_random_types()
     else:
         st.session_state.dynamic_choice = functions.get_double_random_types()
-    st.write(f"""
-                <br>
-                <br>
-                This is the coinflip
-                {st.session_state.coinflip}
-                <br>
-                <br>
-            """)
 
-st.write("Dynamic Choice:", list(st.session_state.dynamic_choice))
+# st.write("Dynamic Choice:", list(st.session_state.dynamic_choice))
 
 types_to_guess = st.columns(st.session_state.coinflip)
 for index, col in enumerate(types_to_guess):
@@ -87,15 +85,6 @@ st.markdown("""
                 <br>
             """,
             unsafe_allow_html=True)
-
-# if 'session_initialized' not in st.session_state:
-#    num = random.randint(1, 2)
-#    if num == 1:
-#        functions.get_dual_type_effectiveness(
-#            types_list[random.randint(0, 17)], types_list[random.randint(0, 17)])
-#    else:
-#        functions.get_single_type_effectiveness()
-
 
 num_columns = len(types_list)
 columns_row1 = st.columns(9)

@@ -58,7 +58,7 @@ def get_single_type_effectiveness(type1, attacking_type):
 
 def get_info():
     """
-
+    gets all the information from the json file in dictionary form
     :return: the json file in dictionary format for use
     """
     with open("type.json", 'r') as file:
@@ -69,23 +69,39 @@ def get_info():
 
 
 def get_all_types():
+    """
+    gets the types from the json file containing their combat information
+    :return: all the standard types in pokemon
+    """
     data = get_info()
     types_list = list(data.keys())
     return types_list[:-1]
 
 
 def get_answers():
+    """
+
+    :return: the type effectiveness attacks that would hit the type combination in question in the form of a list
+    """
     data = get_info()
     answer_list = list(data["typesInQuestion"].values())
     return answer_list
 
 
 def get_single_random_types():
+    """
+
+    :return: a single standard type from pokemon in set format
+    """
     types = get_all_types()
     return {types[random.randint(0, len(types) - 1)]}
 
 
 def get_double_random_types():
+    """
+
+    :return: two standard types from pokemon in set format
+    """
     types = get_all_types()
     type1 = types[random.randint(0, len(types) - 1)]
     type2 = types[random.randint(0, len(types) - 1)]
