@@ -2,7 +2,6 @@ import streamlit as st
 import random
 import functions
 
-
 colors_dict = {
     "normal": '#A8A77A',
     "fire": '#EE8130',
@@ -127,11 +126,79 @@ st.markdown("""
             """,
             unsafe_allow_html=True)
 
-# after pressing submit, the answers will be collected and put into this list
+# after pressing submit, the answers will be
+# collected and put into the list user_answers
 if st.button("Submit"):
     try:
         for index in range(len(columns_row1) + len(columns_row2)):
             user_answers.append(float(st.session_state[f"answer{index}"]))
         st.write(user_answers)
+        if st.session_state.coinflip == 1:
+            for attackingType in types_list:
+                functions.get_single_type_effectiveness(
+                    list(st.session_state.dynamic_choice)[0],
+                    attackingType
+                )
+            correct_answers = functions.get_answers()
+            for index, col in enumerate(columns_row1 + columns_row2):
+                if user_answers[index] == correct_answers[index]:
+                    col.markdown(
+                        f"""
+                            <style>
+                                .right {{
+                                    background-color: green
+                                }}
+                            </style>
+                            <h2 class="right">Correct<h2>
+                            
+                        """,
+                        unsafe_allow_html=True
+                    )
+                else:
+                    col.markdown(
+                        f"""
+                            <style>
+                                .wrong {{
+                                    background-color: red
+                                }}
+                            </style>
+                            <h2 class="wrong">Incorrect<h2>
+                        """,
+                        unsafe_allow_html=True
+                    )
+        else:
+            for attackingType in types_list:
+                functions.get_dual_type_effectiveness(
+                    list(st.session_state.dynamic_choice)[0],
+                    list(st.session_state.dynamic_choice)[1],
+                    attackingType
+                )
+            correct_answers = functions.get_answers()
+            for index, col in enumerate(columns_row1 + columns_row2):
+                if user_answers[index] == correct_answers[index]:
+                    col.markdown(
+                        f"""
+                            <style>
+                                .right {{
+                                    background-color: green
+                                }}
+                            </style>
+                            <h2 class="right">Correct<h2>
+
+                        """,
+                        unsafe_allow_html=True
+                    )
+                else:
+                    col.markdown(
+                        f"""
+                            <style>
+                                .wrong {{
+                                    background-color: red
+                                }}
+                            </style>
+                            <h2 class="wrong">Incorrect<h2>
+                        """,
+                        unsafe_allow_html=True
+                    )
     except ValueError:
         st.write("Please make sure to put a valid answer into every field")

@@ -74,6 +74,12 @@ def get_all_types():
     return types_list[:-1]
 
 
+def get_answers():
+    data = get_info()
+    answer_list = list(data["typesInQuestion"].values())
+    return answer_list
+
+
 def get_single_random_types():
     types = get_all_types()
     return {types[random.randint(0, len(types) - 1)]}
@@ -87,5 +93,7 @@ def get_double_random_types():
         type2 = types[random.randint(0, len(types) - 1)]
     return type1, type2
 
+
 if __name__ == "__main__":
-    print(get_all_types())
+    this_list = get_answers()
+    print(get_answers())
